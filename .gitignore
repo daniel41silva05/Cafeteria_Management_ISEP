@@ -1,0 +1,50 @@
+# Database
+bd
+
+# Ignore Maven build directory
+cafeteria.app.backoffice.console/target/
+cafeteria.app.bootstrap.console/target/
+cafeteria.app.common.console/target/
+cafeteria.core/target/
+cafeteria.bootstrappers/target/
+cafeteria.infrastructure.application/target/
+cafeteria.persistence.impl.jpa/target/
+cafeteria.persistence.impl.inmemory/target/
+target/
+
+# Ignore IntelliJ IDEA files
+/.idea/
+/*.iml
+*.iml
+
+# Ignore Maven files that should not be versioned
+.mvn/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.next
+release.properties
+
+# Ignore log files
+*.log
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore Lombok-generated files
+delombok/
+
+# Ignore Maven dependency-reduced POM files
+**/dependency-reduced-pom.xml
+
+# Ignore Jacoco coverage reports
+jacoco.exec
+*.coverage
+*.coverage.xml
+
+# Ignore Maven test reports
+surefire-reports/
+failsafe-reports/
+
+# Ignore Maven local repository cache
+.m2/
