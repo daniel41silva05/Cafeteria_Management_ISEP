@@ -1,0 +1,20 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "<<aggregate>> CafeteriaUser" {
+    class CafeteriaUser <<entity>> <<root>> {
+    }
+
+    class Role <<value object>> {
+    }
+
+    class MecanographicNumber <<value object>> <<id>> {
+    }
+
+    CafeteriaUser --> "1" Role
+    CafeteriaUser --> "1" MecanographicNumber
+}
+
+@enduml
