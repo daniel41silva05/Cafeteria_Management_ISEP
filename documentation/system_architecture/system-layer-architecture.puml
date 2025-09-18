@@ -1,0 +1,47 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+hide empty members
+
+skinparam rectangle {
+    BackgroundColor #1E90FF
+    BorderColor #000000
+    FontColor white
+}
+
+package "App Layer" as AppLayer {
+    rectangle app.bootstrap
+    rectangle app.backoffice
+    rectangle app.common
+}
+
+package "Core Layer" as CoreLayer {
+    rectangle bootstrappers
+    rectangle core
+}
+
+package "Infrastructure Layer" as InfrastructureLayer {
+    rectangle infrastructure.application
+    rectangle persistence.impl.inmemory
+    rectangle persistence.impl.jpa
+}
+
+package "Framework Layer" as FrameworkLayer {
+    rectangle eapli.framework
+    rectangle util
+}
+
+AppLayer ..> core
+AppLayer ...> infrastructure.application
+InfrastructureLayer ..> core
+CoreLayer ..> FrameworkLayer
+
+app.bootstrap ..> bootstrappers
+app.backoffice ..> app.common
+app.bootstrap ..> app.common
+bootstrappers ..> core
+infrastructure.application ..> persistence.impl.inmemory
+infrastructure.application ..> persistence.impl.jpa
+eapli.framework --> util
+
+@enduml

@@ -9,7 +9,7 @@
         <version>0.1.0</version>
     </parent>
 
-    <groupId>lapr4</groupId>
+    <groupId>lapr4.cafeteria</groupId>
     <artifactId>core</artifactId>
     <packaging>jar</packaging>
 
@@ -22,8 +22,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>lapr4</groupId>
-            <artifactId>application</artifactId>
+            <groupId>lapr4.cafeteria</groupId>
+            <artifactId>infrastructure.application</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 

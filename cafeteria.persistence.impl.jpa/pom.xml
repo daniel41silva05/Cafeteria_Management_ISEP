@@ -9,8 +9,8 @@
         <version>0.1.0</version>
     </parent>
 
-    <groupId>lapr4</groupId>
-    <artifactId>jpa</artifactId>
+    <groupId>lapr4.cafeteria</groupId>
+    <artifactId>persistence.impl.jpa</artifactId>
     <packaging>jar</packaging>
 
     <name>cafeteria.persistence.impl.jpa</name>
@@ -22,9 +22,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>lapr4</groupId>
+            <groupId>lapr4.cafeteria</groupId>
             <artifactId>core</artifactId>
-            <version>${project.parent.version}</version>
+            <version>0.1.0</version>
         </dependency>
 
         <!-- Hibernate C3PO Connection Pooling -->

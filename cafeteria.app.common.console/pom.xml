@@ -9,8 +9,8 @@
         <version>0.1.0</version>
     </parent>
 
-    <groupId>lapr4</groupId>
-    <artifactId>console</artifactId>
+    <groupId>lapr4.cafeteria</groupId>
+    <artifactId>app.common.console</artifactId>
     <packaging>jar</packaging>
 
     <name>cafeteria.app.common.console</name>
@@ -22,12 +22,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>lapr4</groupId>
-            <artifactId>application</artifactId>
+            <groupId>lapr4.cafeteria</groupId>
+            <artifactId>infrastructure.application</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>lapr4</groupId>
+            <groupId>lapr4.cafeteria</groupId>
             <artifactId>core</artifactId>
             <version>0.1.0</version>
             <scope>compile</scope>
