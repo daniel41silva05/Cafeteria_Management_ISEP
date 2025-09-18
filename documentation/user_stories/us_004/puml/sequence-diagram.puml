@@ -1,0 +1,51 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor Admin as Actor
+participant AddUserUI as UI <<presentation>>
+participant AddUserController as Controller <<application>>
+participant AuthzRegistry as Registry <<utility>>
+participant "svc:UserManagementService" as Svc <<application>>
+participant "user:CafeteriaUser" as Domain <<domain>>
+database CafeteriaUserRepository as Repository <<repository>>
+
+Actor --> UI: Add User
+activate UI
+    UI -> Controller: create
+    UI --> Actor: Ask user information
+    Actor --> UI: Mecanographic Number, Email,\nPassword, Name
+    UI --> Actor: Show List of Role Types
+    Actor --> UI: Role Type
+
+    UI -> Controller: addUser(mecanographicNumber, email,\npassword, firstName, lastName, roles)
+    activate Controller
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+            Controller -> Registry : userService()
+            activate Registry
+            Registry --> Controller : svc
+            deactivate Registry
+
+            Controller -> Svc: registerNewUser(mecanographicNumber, password, \nfirstName, lastName, email, roles, currentTime)
+            activate Svc
+            note right of Svc : Framework implementation
+
+            Svc --> Controller : systemUser
+            deactivate Svc
+
+            Controller -> Domain : create(systemUser, mecanographicNumber)
+
+            note right of Controller : Simplified persistence\n(see specific diagram)
+            Controller -> Repository: save(user)
+
+        Controller->UI: user
+    deactivate Controller
+
+        UI-->Actor: Display User Info or error
+deactivate UI
+@enduml
