@@ -1,7 +1,0 @@
-package lapr4.cafeteria.app.backoffice.console.presentation;
-
-public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello world!");
-    }
-}
