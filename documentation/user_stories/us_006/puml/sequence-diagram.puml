@@ -1,0 +1,60 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor Admin as Actor
+participant ActivateUserUI as UI <<presentation>>
+participant ActivateUserController as Controller <<application>>
+participant AuthzRegistry as Registry <<utility>>
+participant "svc:UserManagementService" as Svc <<application>>
+participant "user:CafeteriaUser" as Domain <<domain>>
+database CafeteriaUserRepository as Repository <<repository>>
+
+Actor --> UI: Activate User
+activate UI
+
+    UI -> Controller: create
+
+        UI -> Controller : disabledUsers()
+        activate Controller
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+            note right of Controller : Simplified persistence\n(see specific diagram)
+
+            Controller -> Repository : findAllDisabled()
+            activate Repository
+
+            Repository --> Controller : disabledUsers
+            deactivate Repository
+
+        Controller --> UI : disabledUsers
+        deactivate Controller
+
+UI --> Actor: Show Disabled Users
+Actor --> UI: Select User
+
+    UI -> Controller: enableUser(user)
+    activate Controller
+
+            Controller -> Registry : userService()
+            activate Registry
+            Registry --> Controller : svc
+            deactivate Registry
+
+            Controller -> Svc: activateUser(user)
+            activate Svc
+            note right of Svc : Framework implementation
+
+            Svc --> Controller : user
+            deactivate Svc
+
+        Controller->UI: user
+    deactivate Controller
+
+UI-->Actor: Display User Info or error
+deactivate UI
+@enduml
