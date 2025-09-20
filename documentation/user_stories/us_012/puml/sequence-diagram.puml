@@ -1,0 +1,62 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor MenuManager as Actor
+participant RegisterMealUI as UI <<presentation>>
+participant RegisterMealController as Controller <<application>>
+participant ListDishService as Svc <<application>>
+participant "meal:Meal" as Domain <<domain>>
+database MealRepository as Repository <<repository>>
+
+Actor --> UI: Register Meal
+activate UI
+    UI -> Controller: create
+    UI --> Actor: Ask Day and Show List of Meal Types
+    Actor --> UI: Day and Meal Type
+
+    UI -> Controller: listDish()
+    activate Controller
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+        Controller -> Svc: allActiveDishes()
+        activate Svc
+
+            note right of Svc : Simplified persistence\n(see specific diagram)
+
+            Svc -> Repository: findAllActive()
+            activate Repository
+
+            Repository --> Svc: dishes
+            deactivate Repository
+
+        Svc --> Controller: dishes
+        deactivate Svc
+
+    Controller-->UI: dishes
+    deactivate Controller
+
+    UI --> Actor: Show List of Dishes
+    Actor --> UI: Select Dish
+
+    UI -> Controller: registerMeal(dish, mealType, ofDay)
+    activate Controller
+
+            Controller -> Domain : create(dish, mealType, ofDay)
+
+            Controller -> Repository: save(meal)
+            activate Repository
+
+            Repository --> Controller: meal
+            deactivate Repository
+
+    Controller-->UI: meal
+    deactivate Controller
+
+UI-->Actor: Display Meal Info or error
+deactivate UI
+@enduml
