@@ -5,6 +5,7 @@ import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.application.UserManagementService;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
+import eapli.framework.validations.Preconditions;
 import lapr4.cafeteria.infrastructure.persistence.PersistenceContext;
 import lapr4.cafeteria.user_management.domain.CafeteriaRoles;
 import lapr4.cafeteria.user_management.domain.CafeteriaUser;
@@ -24,6 +25,8 @@ public class DeactivateUserController {
 
     public SystemUser disableUser(final CafeteriaUser cafeteriaUser) {
         authz.ensureAuthenticatedUserHasAnyOf(CafeteriaRoles.POWER_USER, CafeteriaRoles.ADMIN);
+        Preconditions.nonNull(cafeteriaUser);
+
         return svc.deactivateUser(cafeteriaUser.user());
     }
 

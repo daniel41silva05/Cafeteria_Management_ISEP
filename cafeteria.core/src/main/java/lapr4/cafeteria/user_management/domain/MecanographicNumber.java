@@ -9,7 +9,6 @@ import lombok.EqualsAndHashCode;
  * Mecanographic Number is a set of 7 numeric digits.
  */
 
-
 @Embeddable
 @EqualsAndHashCode
 public class MecanographicNumber implements ValueObject, Comparable<MecanographicNumber> {
