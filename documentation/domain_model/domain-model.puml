@@ -17,4 +17,113 @@ package "<<aggregate>> CafeteriaUser" {
     CafeteriaUser --> "1" MecanographicNumber
 }
 
+package "<<aggregate>> Meal" {
+    class Meal <<entity>> <<root>> {
+    }
+
+    class MealType <<value object>> {
+    }
+
+    class Calender {
+    }
+
+    class MealID <<value object>> <<id>> {
+    }
+
+    Meal --> "1" MealID
+    Meal --> "1" MealType
+    Meal --> "1" Calender
+}
+
+package "<<aggregate>> Dish" {
+    class Dish <<entity>> <<root>> {
+        -active : boolean
+    }
+
+    class DishType <<value object>> {
+    }
+
+    class Description <<value object>> {
+    }
+
+    class NutricionalInfo <<value object>> {
+    }
+
+    class Money <<value object>> {
+    }
+
+    class Designation <<value object>> <<id>> {
+    }
+
+    Dish --> "1" Designation
+    Dish --> "1" NutricionalInfo
+    Dish --> "1" Money
+    Dish --> "1" Description
+    Dish --> "1" DishType
+}
+
+package "<<aggregate>> Booking" {
+    class Booking <<entity>> <<root>> {
+    }
+
+    class BookingStatus <<value object>> {
+    }
+
+    class Money <<value object>> {
+    }
+
+    class BookingToken <<value object>> <<id>> {
+    }
+
+    Booking --> "1" BookingToken
+    Booking --> "1" BookingStatus
+    Booking --> "1" Money
+}
+
+package "<<aggregate>> CardBalance" {
+    class CardBalance <<entity>> <<root>> {
+    }
+
+    class Money <<value object>> {
+    }
+
+    class Calender {
+    }
+
+    class CardBalanceID <<value object>> <<id>> {
+    }
+
+    CardBalance --> "1" Money
+    CardBalance --> "1" Calender
+    CardBalance --> "1" CardBalanceID
+}
+
+package "<<aggregate>> CardMovement" {
+    class CardMovement <<entity>> <<root>> {
+    }
+
+    class MovementType <<value object>> {
+    }
+
+    class Money <<value object>> {
+    }
+
+    class Calender {
+    }
+
+    class CardMovementID <<value object>> <<id>> {
+    }
+
+    CardMovement --> "1" MovementType
+    CardMovement --> "1" Money
+    CardMovement --> "1" Calender
+    CardMovement --> "1" CardMovementID
+}
+
+Meal "*" --> "1" Dish : contains
+Booking "*" --> "1" Meal : reserves
+Booking "*" --> "1" CafeteriaUser : belongsTo
+CardBalance "1" --> "1" CafeteriaUser : has balance
+CardMovement "*" --> "1" CafeteriaUser : performed by
+
 @enduml
