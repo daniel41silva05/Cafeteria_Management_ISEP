@@ -1,0 +1,55 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor KitchenManager as Actor
+participant ConsultBookingMealsUI as UI <<presentation>>
+participant ConsultBookingMealsController as Controller <<application>>
+participant ListBookingService as bookSvc <<application>>
+participant "booking:Booking" as Domain <<domain>>
+database BookingRepository as bookRepository <<repository>>
+
+Actor --> UI: Consult Booking Meals
+activate UI
+    UI -> Controller: create
+
+    UI --> Actor: Ask Day
+    Actor --> UI: Day
+
+    UI -> Controller: bookingsPerMealOnDay(day)
+    activate Controller
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+        Controller -> bookSvc: allBookingForDay(day)
+        activate bookSvc
+
+            note right of bookSvc : Simplified persistence\n(see specific diagram)
+
+            bookSvc -> bookRepository: findAllForDay(day)
+            activate bookRepository
+
+            bookRepository --> bookSvc: bookings
+            deactivate bookRepository
+
+        bookSvc --> Controller: bookings
+        deactivate bookSvc
+
+        loop for each booking
+            Controller -> Domain: meal()
+            activate Domain
+            Domain --> Controller: meal
+            deactivate Domain
+
+            note right of Controller : add count to meal on map
+        end
+
+    Controller-->UI: bookingsPerMealMap
+    deactivate Controller
+
+UI-->Actor: Display Meals by Quantities
+deactivate UI
+@enduml
