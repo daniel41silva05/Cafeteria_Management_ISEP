@@ -1,0 +1,115 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor CafeteriaUser as Actor
+participant BookMealUI as UI <<presentation>>
+participant BookMealController as Controller <<application>>
+participant ListMealService as mealSvc <<application>>
+participant AuthorizationService as authSvc <<application>>
+participant CardBalanceService as cardSvc <<application>>
+participant "meal:Meal" as mealDomain <<domain>>
+participant "dish:Dish" as dishDomain <<domain>>
+participant "user:CafeteriaUser" as userDomain <<domain>>
+participant "cardBalance:CardBalance" as cardDomain <<domain>>
+participant "movement:CardMovement" as movDomain <<domain>>
+participant "booking:Booking" as bookDomain <<domain>>
+database MealRepository as mealRepository <<repository>>
+database CardMovementRepository as movRepository <<repository>>
+database CardBalanceRepository as cardRepository <<repository>>
+database BookingRepository as bookRepository <<repository>>
+
+Actor --> UI: Book A Meal
+activate UI
+    UI -> Controller: create
+
+    UI --> Actor: Ask Day and Select Meal Type
+    Actor --> UI: Day and Meal Type
+
+    UI -> Controller: mealsForDayAndType(forDay, mealType)
+    activate Controller
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+        Controller -> mealSvc: allMealsForDayAndType(forDay, mealType)
+        activate mealSvc
+
+            note right of mealSvc : Simplified persistence\n(see specific diagram)
+
+            mealSvc -> mealRepository: allMealsForDayAndType(forDay, mealType)
+            activate mealRepository
+
+            mealRepository --> mealSvc: meals
+            deactivate mealRepository
+
+        mealSvc --> Controller: meals
+        deactivate mealSvc
+
+    Controller-->UI: meals
+    deactivate Controller
+
+    UI --> Actor: Show List of Meals
+    Actor --> UI: Select Meal
+
+    UI -> Controller: bookMeal(meal)
+    activate Controller
+
+            Controller -> mealDomain: dish()
+            activate mealDomain
+
+            mealDomain --> Controller : dish
+            deactivate mealDomain
+
+            Controller -> dishDomain: price()
+            activate dishDomain
+
+            dishDomain --> Controller : cost
+            deactivate dishDomain
+
+            Controller -> authSvc: currentUser()
+            activate authSvc
+
+            note right of authSvc : Framework implementation
+
+            authSvc --> Controller : user
+            deactivate authSvc
+
+            Controller -> userDomain: identity()
+            activate userDomain
+
+            userDomain --> Controller : mecanographicNumber
+            deactivate userDomain
+
+        Controller -> cardSvc: findCardBalanceByMecNumber(mecanographicNumber)
+        activate cardSvc
+
+            cardSvc -> cardRepository: findByMecanographicNumber(mecanographicNumber)
+            activate cardRepository
+
+            cardRepository --> cardSvc: cardBalance
+            deactivate cardRepository
+
+        cardSvc --> Controller: cardBalance
+        deactivate cardSvc
+
+        Controller -> cardDomain: applyMovement(cost)
+
+        Controller -> cardRepository: save(cardBalance)
+
+        Controller -> movDomain: create(type, cost, user)
+
+        Controller -> movRepository: save(movement)
+
+        Controller -> bookDomain: create(user, meal)
+
+        Controller -> bookRepository: save(booking)
+
+    Controller-->UI: booking
+    deactivate Controller
+
+UI-->Actor: Display Booking
+deactivate UI
+@enduml
