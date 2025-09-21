@@ -1,0 +1,44 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor MenuManager as Actor
+participant ConsultMealUI as UI <<presentation>>
+participant ConsultMealController as Controller <<application>>
+participant ListMealService as Svc <<application>>
+database MealRepository as Repository <<repository>>
+
+Actor --> UI: Consult Meals
+activate UI
+    UI -> Controller: create
+    UI --> Actor: Ask Day and Show List of Meal Types
+    Actor --> UI: Day and Meal Type
+
+    UI -> Controller: mealsForDayAndType()
+    activate Controller
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+        Controller -> Svc: allMealsForDayAndType(day, mealType)
+        activate Svc
+
+            note right of Svc : Simplified persistence\n(see specific diagram)
+
+            Svc -> Repository: findByDayAndType(day, mealType)
+            activate Repository
+
+            Repository --> Svc: meals
+            deactivate Repository
+
+        Svc --> Controller: meals
+        deactivate Svc
+
+    Controller-->UI: meals
+    deactivate Controller
+
+UI-->Actor: Display Meals
+deactivate UI
+@enduml
