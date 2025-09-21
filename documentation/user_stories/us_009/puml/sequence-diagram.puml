@@ -1,0 +1,60 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor MenuManager as Actor
+participant ActivateDeactivateDishUI as UI <<presentation>>
+participant ActivateDeactivateDishController as Controller <<application>>
+participant "ListDishService" as Svc <<application>>
+participant "dish:Dish" as Domain <<domain>>
+database DishRepository as Repository <<repository>>
+
+Actor --> UI: Activate or Deactivate Dish
+activate UI
+    UI -> Controller: create
+
+    UI -> Controller: listDish()
+    activate Controller
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+            Controller -> Svc: allDishes()
+            activate Svc
+
+            note right of Svc : Simplified persistence\n(see specific diagram)
+
+            Svc -> Repository: findAll()
+            activate Repository
+
+            Repository --> Svc: dishes
+            deactivate Repository
+
+            Svc --> Controller: dishes
+            deactivate Svc
+
+        Controller->UI: dishes
+    deactivate Controller
+
+UI --> Actor: Show Dishes
+Actor --> UI: Select Dish
+
+    UI -> Controller: changeDishState(dish)
+    activate Controller
+
+            Controller -> Domain : toogleState()
+
+            Controller -> Repository: save(dish)
+            activate Repository
+
+            Repository --> Controller: dish
+            deactivate Repository
+
+        Controller->UI: dish
+    deactivate Controller
+
+        UI-->Actor: Display Dish Info or error
+deactivate UI
+@enduml
