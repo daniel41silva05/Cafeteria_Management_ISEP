@@ -1,0 +1,106 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor CafeteriaUser as Actor
+participant CancelBookingUI as UI <<presentation>>
+participant CancelBookingController as Controller <<application>>
+participant AuthorizationService as authSvc <<application>>
+participant ListBookingService as bookSvc <<application>>
+participant CardBalanceService as cardSvc <<application>>
+participant "booking:Booking" as bookDomain <<domain>>
+participant "user:CafeteriaUser" as userDomain <<domain>>
+participant "cardBalance:CardBalance" as cardDomain <<domain>>
+participant "movement:CardMovement" as movDomain <<domain>>
+database BookingRepository as bookRepository <<repository>>
+database CardMovementRepository as movRepository <<repository>>
+database CardBalanceRepository as cardRepository <<repository>>
+
+Actor --> UI: Cancel A Booking
+activate UI
+    UI -> Controller: create
+
+    UI --> Actor: Ask Day
+    Actor --> UI: Day
+
+    UI -> Controller: bookingsForDay(day)
+    activate Controller
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+            Controller -> authSvc: currentUser()
+            activate authSvc
+
+            note right of authSvc : Framework implementation
+
+            authSvc --> Controller : user
+            deactivate authSvc
+
+        Controller -> bookSvc: allBookingByUserForDay(user, day)
+        activate bookSvc
+
+            note right of bookSvc : Simplified persistence\n(see specific diagram)
+
+            bookSvc -> bookRepository: findByUserForDay(user, day)
+            activate bookRepository
+
+            bookRepository --> bookSvc: bookings
+            deactivate bookRepository
+
+        bookSvc --> Controller: bookings
+        deactivate bookSvc
+
+    Controller-->UI: bookings
+    deactivate Controller
+
+    UI --> Actor: Show List of Bookings
+    Actor --> UI: Select Booking
+
+    UI -> Controller: cancelBooking(booking)
+    activate Controller
+
+            Controller -> bookDomain: cost()
+            activate bookDomain
+
+            bookDomain --> Controller : cost
+            deactivate bookDomain
+
+            Controller -> userDomain: identity()
+            activate userDomain
+
+            userDomain --> Controller : mecanographicNumber
+            deactivate userDomain
+
+        Controller -> cardSvc: findCardBalanceByMecNumber(mecanographicNumber)
+        activate cardSvc
+
+            cardSvc -> cardRepository: findByMecanographicNumber(mecanographicNumber)
+            activate cardRepository
+
+            cardRepository --> cardSvc: cardBalance
+            deactivate cardRepository
+
+        cardSvc --> Controller: cardBalance
+        deactivate cardSvc
+
+        Controller -> cardDomain: applyMovement(cost)
+
+        Controller -> cardRepository: save(cardBalance)
+
+        Controller -> movDomain: create(type, cost, user)
+
+        Controller -> movRepository: save(movement)
+
+        Controller -> bookDomain: cancel()
+
+        Controller -> bookRepository: save(booking)
+
+    Controller-->UI: booking
+    deactivate Controller
+
+UI-->Actor: Display Booking
+deactivate UI
+@enduml
