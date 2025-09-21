@@ -16,3 +16,8 @@
 
   ![Sequence Diagram](svg/sequence-diagram.svg "A Sequence Diagram")
 
+### 4. Integration/Demonstration
+
+- To test the bootstrap process, simply run the script: *./run-bootstrap*
+- To manually activate user, you must run the script *./run-backoffice*, log in with a user who is an Admin,
+  and click on the Activate User option.

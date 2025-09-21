@@ -1,8 +1,8 @@
-# US005 – Deactivate User
+# US007 - List Users
 
 ### 1. Context
 
-**As an administrator, I want to deactivate a user account, so that I can restrict access in cases of inactivity, departure, or misuse.**
+**As an administrator, I want to view a list of all user accounts, so that I can manage and monitor system access.**
 
 ### 2. Analysis
 
@@ -19,5 +19,5 @@
 ### 4. Integration/Demonstration
 
 - To test the bootstrap process, simply run the script: *./run-bootstrap*
-- To manually deactivate user, you must run the script *./run-backoffice*, log in with a user who is an Admin,
-  and click on the Deactivate User option.
+- To manually list users, you must run the script *./run-backoffice*, log in with a user who is an Admin,
+  and click on the List Users option.

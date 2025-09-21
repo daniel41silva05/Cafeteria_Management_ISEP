@@ -1,0 +1,43 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor Admin as Actor
+participant ListUsersUI as UI <<presentation>>
+participant ListUsersController as Controller <<application>>
+participant "CafeteriaUserService" as Svc <<application>>
+database CafeteriaUserRepository as Repository <<repository>>
+
+Actor --> UI: List Users
+activate UI
+
+    UI -> Controller: create
+
+        UI -> Controller : listUsers()
+        activate Controller
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+            Controller -> Svc: allUsers()
+            activate Svc
+
+            note right of Svc : Simplified persistence\n(see specific diagram)
+
+            Svc -> Repository : findAll()
+            activate Repository
+
+            Repository --> Svc : users
+            deactivate Repository
+
+            Svc --> Controller : users
+            deactivate Svc
+
+        Controller --> UI : users
+        deactivate Controller
+
+UI-->Actor: Display Users
+deactivate UI
+@enduml
