@@ -1,0 +1,40 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "<<aggregate>> CafeteriaUser" {
+    class CafeteriaUser <<entity>> <<root>> {
+    }
+
+    class Role <<value object>> {
+    }
+
+    class MecanographicNumber <<value object>> <<id>> {
+    }
+
+    CafeteriaUser --> "1" Role
+    CafeteriaUser --> "1" MecanographicNumber
+}
+
+package "<<aggregate>> CardBalance" {
+    class CardBalance <<entity>> <<root>> {
+    }
+
+    class Money <<value object>> {
+    }
+
+    class Calender {
+    }
+
+    class CardBalanceID <<value object>> <<id>> {
+    }
+
+    CardBalance --> "1" Money
+    CardBalance --> "1" Calender
+    CardBalance --> "1" CardBalanceID
+}
+
+CardBalance "1" --> "1" CafeteriaUser : has balance
+
+@enduml

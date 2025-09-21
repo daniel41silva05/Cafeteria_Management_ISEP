@@ -1,0 +1,65 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor CafeteriaUser as Actor
+participant ConsultUserCardBalanceUI as UI <<presentation>>
+participant ConsultUserCardBalanceController as Controller <<application>>
+participant AuthorizationService as authSvc <<application>>
+participant CardBalanceService as cardSvc <<application>>
+participant "user:CafeteriaUser" as userDomain <<domain>>
+participant "cardBalance:CardBalance" as Domain <<domain>>
+database CardBalanceRepository as cardRepository <<repository>>
+
+Actor --> UI: Consult Card Balance
+activate UI
+    UI -> Controller: create
+
+    UI -> Controller: consultCardBalance()
+    activate Controller
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+            Controller -> authSvc: currentUser()
+            activate authSvc
+
+            note right of authSvc : Framework implementation
+
+            authSvc --> Controller : user
+            deactivate authSvc
+
+            Controller -> userDomain: identity()
+            activate userDomain
+
+            userDomain --> Controller : mecanographicNumber
+            deactivate userDomain
+
+        Controller -> cardSvc: findCardBalanceByMecNumber(mecanographicNumber)
+        activate cardSvc
+
+            note right of cardSvc : Simplified persistence\n(see specific diagram)
+
+            cardSvc -> cardRepository: findByMecanographicNumber(mecanographicNumber)
+            activate cardRepository
+
+            cardRepository --> cardSvc: userCardBalance
+            deactivate cardRepository
+
+        cardSvc --> Controller: userCardBalance
+        deactivate cardSvc
+
+        Controller -> Domain: balance()
+        activate Domain
+
+        Domain --> Controller: amount
+        deactivate Domain
+
+    Controller-->UI: amount
+    deactivate Controller
+
+UI-->Actor: Display Amount
+deactivate UI
+@enduml
