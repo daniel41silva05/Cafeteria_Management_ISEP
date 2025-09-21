@@ -1,0 +1,54 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor CafeteriaUser as Actor
+participant ConsultMyBookingUI as UI <<presentation>>
+participant ConsultMyBookingController as Controller <<application>>
+participant AuthorizationService as authSvc <<application>>
+participant ListBookingService as bookSvc <<application>>
+database BookingRepository as bookRepository <<repository>>
+
+Actor --> UI: Consult My Bookings
+activate UI
+    UI -> Controller: create
+
+    UI --> Actor: Ask Day
+    Actor --> UI: Day
+
+    UI -> Controller: bookingsByUserForDay(day)
+    activate Controller
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+            Controller -> authSvc: currentUser()
+            activate authSvc
+
+            note right of authSvc : Framework implementation
+
+            authSvc --> Controller : user
+            deactivate authSvc
+
+        Controller -> bookSvc: allBookingByUserForDay(user, day)
+        activate bookSvc
+
+            note right of bookSvc : Simplified persistence\n(see specific diagram)
+
+            bookSvc -> bookRepository: findByUserForDay(user, day)
+            activate bookRepository
+
+            bookRepository --> bookSvc: bookings
+            deactivate bookRepository
+
+        bookSvc --> Controller: bookings
+        deactivate bookSvc
+
+    Controller-->UI: bookings
+    deactivate Controller
+
+UI-->Actor: Display Bookings
+deactivate UI
+@enduml
