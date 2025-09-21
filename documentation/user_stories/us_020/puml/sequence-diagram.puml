@@ -1,0 +1,56 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor Cashier as Actor
+participant MarkBookingAsDeliveredUI as UI <<presentation>>
+participant MarkBookingAsDeliveredController as Controller <<application>>
+participant "booking:Booking" as Domain <<domain>>
+database BookingRepository as bookRepository <<repository>>
+
+Actor --> UI: Mark Booking as Delivered
+activate UI
+    UI -> Controller: create
+
+    UI --> Actor: Ask Booking token
+    Actor --> UI: Booking token
+
+    UI -> Controller: bookingByToken(bookingToken)
+    activate Controller
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+            note right of Controller : Simplified persistence\n(see specific diagram)
+
+            Controller -> bookRepository: ofIdentify(bookingToken)
+            activate bookRepository
+
+        bookRepository --> Controller: booking
+        deactivate bookRepository
+
+    Controller-->UI: booking
+    deactivate Controller
+
+    UI --> Actor: Display Booking
+    Actor --> UI: Confirms
+
+    UI -> Controller: markBookingAsDelivered(booking)
+    activate Controller
+
+        Controller -> Domain : deliver()
+
+        Controller -> bookRepository: save(booking)
+        activate bookRepository
+
+        bookRepository --> Controller: booking
+        deactivate bookRepository
+
+    Controller-->UI: booking
+    deactivate Controller
+
+UI-->Actor: Display Booking Info or error
+deactivate UI
+@enduml

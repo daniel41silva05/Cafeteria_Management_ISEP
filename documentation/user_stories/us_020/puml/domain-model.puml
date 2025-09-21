@@ -1,0 +1,87 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "<<aggregate>> CafeteriaUser" {
+    class CafeteriaUser <<entity>> <<root>> {
+    }
+
+    class Role <<value object>> {
+    }
+
+    class MecanographicNumber <<value object>> <<id>> {
+    }
+
+    CafeteriaUser --> "1" Role
+    CafeteriaUser --> "1" MecanographicNumber
+}
+
+package "<<aggregate>> Meal" {
+    class Meal <<entity>> <<root>> {
+    }
+
+    class MealType <<value object>> {
+    }
+
+    class Calender {
+    }
+
+    class MealID <<value object>> <<id>> {
+    }
+
+    Meal --> "1" MealID
+    Meal --> "1" MealType
+    Meal --> "1" Calender
+}
+
+package "<<aggregate>> Dish" {
+    class Dish <<entity>> <<root>> {
+        -active : boolean
+    }
+
+    class DishType <<value object>> {
+    }
+
+    class Description <<value object>> {
+    }
+
+    class NutricionalInfo <<value object>> {
+    }
+
+    class Money <<value object>> {
+    }
+
+    class Designation <<value object>> <<id>> {
+    }
+
+    Dish --> "1" Designation
+    Dish --> "1" NutricionalInfo
+    Dish --> "1" Money
+    Dish --> "1" Description
+    Dish --> "1" DishType
+}
+
+package "<<aggregate>> Booking" {
+    class Booking <<entity>> <<root>> {
+    }
+
+    class BookingStatus <<value object>> {
+    }
+
+    class Money <<value object>> {
+    }
+
+    class BookingToken <<value object>> <<id>> {
+    }
+
+    Booking --> "1" BookingToken
+    Booking --> "1" BookingStatus
+    Booking --> "1" Money
+}
+
+Meal "*" --> "1" Dish : contains
+Booking "*" --> "1" Meal : reserves
+Booking "*" --> "1" CafeteriaUser : belongsTo
+
+@enduml
