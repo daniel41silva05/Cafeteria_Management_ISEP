@@ -1,0 +1,33 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "<<aggregate>> Dish" {
+    class Dish <<entity>> <<root>> {
+        -active : boolean
+    }
+
+    class DishType <<value object>> {
+    }
+
+    class Description <<value object>> {
+    }
+
+    class NutricionalInfo <<value object>> {
+    }
+
+    class Money <<value object>> {
+    }
+
+    class Designation <<value object>> <<id>> {
+    }
+
+    Dish --> "1" Designation
+    Dish --> "1" NutricionalInfo
+    Dish --> "1" Money
+    Dish --> "1" Description
+    Dish --> "1" DishType
+}
+
+@enduml

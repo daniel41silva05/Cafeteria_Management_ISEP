@@ -1,0 +1,78 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor MenuManager as Actor
+participant ChangeDishUI as UI <<presentation>>
+participant ChangeDishController as Controller <<application>>
+participant "ListDishService" as Svc <<application>>
+participant "dish:Dish" as Domain <<domain>>
+database DishRepository as Repository <<repository>>
+
+Actor --> UI: Update Dish Price or Nutritional Info
+activate UI
+
+UI --> Actor: Ask new price, calories and salt
+Actor --> UI: Price, calories and salt
+
+    UI -> Controller: create
+
+    UI -> Controller: listDish()
+    activate Controller
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+            Controller -> Svc: allDishes()
+            activate Svc
+
+            note right of Svc : Simplified persistence\n(see specific diagram)
+
+            Svc -> Repository: findAll()
+            activate Repository
+
+            Repository --> Svc: dishes
+            deactivate Repository
+
+            Svc --> Controller: dishes
+            deactivate Svc
+
+        Controller->UI: dishes
+    deactivate Controller
+
+UI --> Actor: Show Dishes
+Actor --> UI: Select Dish
+
+    UI -> Controller: changeDishPrice(dish, price)
+    activate Controller
+
+            Controller -> Domain : changePriceTo(price)
+
+            Controller -> Repository: save(dish)
+            activate Repository
+
+            Repository --> Controller: dish
+            deactivate Repository
+
+        Controller->UI: dish
+    deactivate Controller
+
+    UI -> Controller: changeDishNutricionalInfo(dish, calories, salt)
+    activate Controller
+
+            Controller -> Domain : changeNutricionalInfoTo(calories, salt)
+
+            Controller -> Repository: save(dish)
+            activate Repository
+
+            Repository --> Controller: dish
+            deactivate Repository
+
+        Controller->UI: dish
+    deactivate Controller
+
+        UI-->Actor: Display Dish Info or error
+deactivate UI
+@enduml
