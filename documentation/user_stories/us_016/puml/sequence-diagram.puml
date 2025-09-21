@@ -1,0 +1,70 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor Cashier as Actor
+participant RechargeUserCardUI as UI <<presentation>>
+participant RechargeUserCardController as Controller <<application>>
+participant CafeteriaUserService as userSvc <<application>>
+participant CardBalanceService as cardSvc <<application>>
+participant "movement:CardMovement" as movDomain <<domain>>
+participant "cardBalance:CardBalance" as cardDomain <<domain>>
+database CafeteriaUserRepository as userRepository <<repository>>
+database CardMovementRepository as movRepository <<repository>>
+database CardBalanceRepository as cardRepository <<repository>>
+
+Actor --> UI: Recharge User Card
+activate UI
+    UI --> Actor: Ask mecanographic number and amount
+    Actor --> UI: Mecanographic Number and Amount
+
+    UI -> Controller: create
+
+    UI -> Controller: rechargeUserCard(mecanographicNumber, amount)
+    activate Controller
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+            Controller -> userSvc: findUserByMecNumber(mecanographicNumber)
+            activate userSvc
+
+            note right of userSvc : Simplified persistence\n(see specific diagram)
+
+            userSvc -> userRepository : ofIdentity(mecanographicNumber)
+            activate userRepository
+
+            userRepository --> userSvc : user
+            deactivate userRepository
+
+            userSvc --> Controller : user
+            deactivate userSvc
+
+            Controller -> movDomain : create(movementType, amount, user)
+
+            Controller -> movRepository : save(movement)
+
+            Controller -> cardSvc: findCardBalanceByMecNumber(mecanographicNumber)
+            activate cardSvc
+
+            cardSvc -> cardRepository : findByMecanographicNumber(mecanographicNumber)
+            activate cardRepository
+
+            cardRepository --> cardSvc : cardBalance
+            deactivate cardRepository
+
+            cardSvc --> Controller : cardBalance
+            deactivate cardSvc
+
+            Controller -> cardDomain : applyMovement(amount)
+
+            Controller -> cardRepository: save(cardBalance)
+
+    Controller-->UI: movement
+    deactivate Controller
+
+UI-->Actor: Display recharge performed
+deactivate UI
+@enduml
