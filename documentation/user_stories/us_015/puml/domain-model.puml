@@ -1,0 +1,44 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+hide empty attributes
+
+package "<<aggregate>> CafeteriaUser" {
+    class CafeteriaUser <<entity>> <<root>> {
+    }
+
+    class Role <<value object>> {
+    }
+
+    class MecanographicNumber <<value object>> <<id>> {
+    }
+
+    CafeteriaUser --> "1" Role
+    CafeteriaUser --> "1" MecanographicNumber
+}
+
+package "<<aggregate>> CardMovement" {
+    class CardMovement <<entity>> <<root>> {
+    }
+
+    class MovementType <<value object>> {
+    }
+
+    class Money <<value object>> {
+    }
+
+    class Calender {
+    }
+
+    class CardMovementID <<value object>> <<id>> {
+    }
+
+    CardMovement --> "1" MovementType
+    CardMovement --> "1" Money
+    CardMovement --> "1" Calender
+    CardMovement --> "1" CardMovementID
+}
+
+CardMovement "*" --> "1" CafeteriaUser : performed by
+
+@enduml

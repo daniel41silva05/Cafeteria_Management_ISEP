@@ -1,0 +1,54 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor CafeteriaUser as Actor
+participant ConsultUserCardMovementsUI as UI <<presentation>>
+participant ConsultUserCardMovementsController as Controller <<application>>
+participant AuthorizationService as authSvc <<application>>
+participant "user:CafeteriaUser" as userDomain <<domain>>
+database CardMovementRepository as Repository <<repository>>
+
+Actor --> UI: Consult Card Movements
+activate UI
+    UI --> Actor: Ask Dates
+    Actor --> UI: Begin and End Date
+
+    UI -> Controller: create
+
+    UI -> Controller: consultCardMovementsOnPeriod(beginDate, endDate)
+    activate Controller
+
+        note right of Controller : hidden authorization user guarantee \n(see specific diagram)
+
+            Controller -> authSvc: currentUser()
+            activate authSvc
+
+            note right of authSvc : Framework implementation
+
+            authSvc --> Controller : user
+            deactivate authSvc
+
+            Controller -> userDomain: identity()
+            activate userDomain
+
+            userDomain --> Controller : mecanographicNumber
+            deactivate userDomain
+
+            note right of Controller : Simplified persistence\n(see specific diagram)
+
+            Controller -> Repository: findByMecanographicNumberAndPeriod(mecanographicNumber, beginDate, endDate)
+            activate Repository
+
+            Repository --> Controller: cardMovements
+            deactivate Repository
+
+    Controller-->UI: cardMovements
+    deactivate Controller
+
+UI-->Actor: Display Card Movements
+deactivate UI
+@enduml
