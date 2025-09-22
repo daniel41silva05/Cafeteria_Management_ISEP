@@ -11,7 +11,10 @@ import eapli.framework.presentation.console.menu.HorizontalMenuRenderer;
 import eapli.framework.presentation.console.menu.MenuItemRenderer;
 import eapli.framework.presentation.console.menu.MenuRenderer;
 import eapli.framework.presentation.console.menu.VerticalMenuRenderer;
+import lapr4.cafeteria.app.backoffice.console.presentation.users.ActivateUserAction;
 import lapr4.cafeteria.app.backoffice.console.presentation.users.AddUserAction;
+import lapr4.cafeteria.app.backoffice.console.presentation.users.DeactivateUserAction;
+import lapr4.cafeteria.app.backoffice.console.presentation.users.ListUsersAction;
 import lapr4.cafeteria.app.common.console.presentation.MyUserMenu;
 import lapr4.cafeteria.infrastructure.Application;
 import lapr4.cafeteria.user_management.domain.CafeteriaRoles;
@@ -91,9 +94,9 @@ public class MainMenu extends AbstractUI {
 
         if (authz.isAuthenticatedUserAuthorizedTo(CafeteriaRoles.POWER_USER, CafeteriaRoles.ADMIN)) {
             menu.addItem(ADD_USER_OPTION, "Add User", new AddUserAction());
-//            menu.addItem(LIST_USERS_OPTION, "List all Users", new ListUsersAction());
-//            menu.addItem(DISABLE_USER_OPTION, "Disable User", new DisableUserAction());
-//            menu.addItem(ENABLE_USER_OPTION, "Enable User", new EnableUserAction());
+            menu.addItem(LIST_USERS_OPTION, "List all Users", new ListUsersAction());
+            menu.addItem(DISABLE_USER_OPTION, "Deactivate User", new DeactivateUserAction());
+            menu.addItem(ENABLE_USER_OPTION, "Activate User", new ActivateUserAction());
         }
 
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
