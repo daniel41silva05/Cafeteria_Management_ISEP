@@ -11,6 +11,12 @@
     <class>eapli.framework.infrastructure.authz.domain.model.Role</class>
     <class>eapli.framework.infrastructure.authz.domain.model.RoleSet</class>
     <class>eapli.framework.infrastructure.authz.domain.model.RoleAssignment</class>
+    <class>lapr4.cafeteria.user_management.domain.CafeteriaUser</class>
+    <class>lapr4.cafeteria.dish_management.domain.Dish</class>
+    <class>lapr4.cafeteria.meal_management.domain.Meal</class>
+    <class>lapr4.cafeteria.meal_booking.domain.Booking</class>
+    <class>lapr4.cafeteria.card_account.domain.CardMovement</class>
+    <class>lapr4.cafeteria.card_account.domain.CardBalance</class>
 
     <properties>
       <!-- Database configuration. -->
