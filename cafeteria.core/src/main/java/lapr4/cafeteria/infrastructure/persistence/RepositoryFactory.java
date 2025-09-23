@@ -19,8 +19,6 @@ public interface RepositoryFactory {
 
     UserRepository users();
 
-    CafeteriaUserRepository cafeteriaUsers(TransactionalContext autoTx);
-
     CafeteriaUserRepository cafeteriaUsers();
 
     DishRepository dishes();
