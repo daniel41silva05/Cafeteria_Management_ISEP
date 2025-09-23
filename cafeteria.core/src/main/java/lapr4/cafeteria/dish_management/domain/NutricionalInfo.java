@@ -27,6 +27,14 @@ public class NutricionalInfo implements ValueObject {
         // for ORM
     }
 
+    public Integer calories() {
+        return calories;
+    }
+
+    public Integer salt() {
+        return salt;
+    }
+
     public static NutricionalInfo valueOf(final int calories, final int salt) {
         return new NutricionalInfo(calories, salt);
     }
