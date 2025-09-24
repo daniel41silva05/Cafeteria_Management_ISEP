@@ -1,22 +1,22 @@
-package lapr4.cafeteria.app.backoffice.console.presentation.card_accounts;
+package lapr4.cafeteria.app.backoffice.console.presentation.meal_bookings;
 
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
-import lapr4.cafeteria.card_account.application.ConsultUserCardMovementsController;
-import lapr4.cafeteria.card_account.domain.CardMovement;
+import lapr4.cafeteria.meal_booking.application.ConsultMyBookingController;
+import lapr4.cafeteria.meal_booking.domain.Booking;
 
 import java.util.Calendar;
 
 @SuppressWarnings("java:S106")
-public class ConsultUserCardMovementsUI extends AbstractUI {
+public class ConsultMyBookingUI extends AbstractUI {
 
-    private final ConsultUserCardMovementsController controller = new ConsultUserCardMovementsController();
+    private final ConsultMyBookingController controller = new ConsultMyBookingController();
 
     @Override
     protected boolean doShow() {
-        System.out.println("====== Card Movement Menu ======");
-        System.out.println("1 - Consult all card movements");
-        System.out.println("2 - Consult card movements for period");
+        System.out.println("====== Booking Menu ======");
+        System.out.println("1 - Consult bookings for day");
+        System.out.println("2 - Consult bookings for period");
         System.out.println("0 - Exit");
 
         int choice = Console.readOption(1, 2, 0);
@@ -24,13 +24,14 @@ public class ConsultUserCardMovementsUI extends AbstractUI {
         try {
             switch (choice) {
                 case 1:
-                    showList(controller.consultAllCardMovements());
+                    final Calendar day = Console.readCalendar("Day: ");
+                    showList(controller.bookingsByUserForDay(day));
                     break;
 
                 case 2:
                     final Calendar beginDay = Console.readCalendar("Begin Day: ");
                     final Calendar endDay = Console.readCalendar("End Day: ");
-                    showList(controller.consultCardMovementsOnPeriod(beginDay, endDay));
+                    showList(controller.bookingsByUserForPeriod(beginDay, endDay));
                     break;
 
                 case 0:
@@ -46,21 +47,21 @@ public class ConsultUserCardMovementsUI extends AbstractUI {
         return false;
     }
 
-    private void showList(final Iterable<CardMovement> movements) {
-        if (!movements.iterator().hasNext()) {
-            System.out.println("There are no movements");
+    private void showList(final Iterable<Booking> bookings) {
+        if (!bookings.iterator().hasNext()) {
+            System.out.println("There are no bookings");
             return;
         }
-        CardMovementPrinter printer = new CardMovementPrinter();
+        BookingPrinter printer = new BookingPrinter();
         System.out.println(printer.header());
-        for (CardMovement movement : movements) {
-            printer.visit(movement);
+        for (Booking booking : bookings) {
+            printer.visit(booking);
         }
     }
 
     @Override
     public String headline() {
-        return "Consult Card Movements";
+        return "Consult My Bookings";
     }
 
 }
