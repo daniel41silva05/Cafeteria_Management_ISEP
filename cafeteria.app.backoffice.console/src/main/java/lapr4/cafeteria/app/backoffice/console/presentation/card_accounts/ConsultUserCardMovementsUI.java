@@ -21,20 +21,24 @@ public class ConsultUserCardMovementsUI extends AbstractUI {
 
         int choice = Console.readOption(1, 2, 0);
 
-        switch (choice) {
-            case 1:
-                showList(controller.consultAllCardMovements());
-                break;
+        try {
+            switch (choice) {
+                case 1:
+                    showList(controller.consultAllCardMovements());
+                    break;
 
-            case 2:
-                final Calendar beginDay = Console.readCalendar("Begin Day: ");
-                final Calendar endDay = Console.readCalendar("End Day: ");
-                showList(controller.consultCardMovementsOnPeriod(beginDay, endDay));
-                break;
+                case 2:
+                    final Calendar beginDay = Console.readCalendar("Begin Day: ");
+                    final Calendar endDay = Console.readCalendar("End Day: ");
+                    showList(controller.consultCardMovementsOnPeriod(beginDay, endDay));
+                    break;
 
-            case 0:
-                System.out.println("Exiting...");
-                break;
+                case 0:
+                    System.out.println("Exiting...");
+                    break;
+            }
+        } catch (IllegalStateException e) {
+            System.out.println("Error: Could not retrieve the current user session.");
         }
 
         return false;
