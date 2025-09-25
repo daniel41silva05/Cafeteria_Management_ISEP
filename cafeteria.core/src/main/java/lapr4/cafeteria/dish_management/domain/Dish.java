@@ -33,21 +33,18 @@ public class Dish implements AggregateRoot<Designation> {
 
     private Description shortDescription;
 
-    private Description longDescription;
-
     private Money price;
 
     private boolean active;
 
     public Dish(final Designation name, final DishType dishType, final Description shortDescription,
-                final Description longDescription, final Money price, final NutricionalInfo nutricionalInfo) {
-        Preconditions.noneNull(name, dishType, shortDescription, longDescription, price);
+                final Money price, final NutricionalInfo nutricionalInfo) {
+        Preconditions.noneNull(name, dishType, shortDescription, price);
 
         this.name = name;
         this.dishType = dishType;
         this.nutricionalInfo = nutricionalInfo;
         this.shortDescription = shortDescription;
-        this.longDescription = longDescription;
         this.price = price;
         this.active = true;
     }

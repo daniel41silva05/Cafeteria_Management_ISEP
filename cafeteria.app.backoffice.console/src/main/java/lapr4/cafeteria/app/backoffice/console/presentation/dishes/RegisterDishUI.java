@@ -18,12 +18,11 @@ public class RegisterDishUI extends AbstractUI {
         final DishType dishType = selectDishType();
         final double price = Console.readDouble("Price: ");
         final String shortDescription = Console.readLine("Short Description: ");
-        final String longDescription = Console.readLine("Long Description: ");
         final int calories = Console.readInteger("Calories: ");
         final int salt = Console.readInteger("Salt: ");
 
         try {
-            Dish dish = controller.registerDish(name, dishType, price, shortDescription, longDescription, calories, salt);
+            Dish dish = controller.registerDish(name, dishType, price, shortDescription, calories, salt);
             showDishResult(dish);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());

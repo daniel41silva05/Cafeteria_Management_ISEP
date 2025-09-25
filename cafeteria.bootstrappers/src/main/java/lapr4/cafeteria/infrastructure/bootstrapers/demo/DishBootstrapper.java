@@ -16,29 +16,25 @@ public class DishBootstrapper implements Action {
     public boolean execute() {
         registerDish(TestDataConstants.DISH_NAME_MEAT, DishType.MEAT, 12.5,
                 "Juicy grilled steak with crispy fries",
-                "Premium beef steak grilled to perfection, served with golden fries.",
                 950, 3);
 
         registerDish(TestDataConstants.DISH_NAME_FISH, DishType.FISH, 11.0,
                 "Fresh grilled salmon with lemon",
-                "Delicious salmon fillet grilled and served with a light lemon butter sauce.",
                 700, 2);
 
         registerDish(TestDataConstants.DISH_NAME_VEGETARIAN, DishType.VEGETARIAN, 9.0,
                 "Homemade vegetable lasagna",
-                "Layers of fresh vegetables, pasta, tomato sauce and mozzarella cheese.",
                 600, 2);
 
         return true;
     }
 
     private void registerDish(final String name, final DishType dishType, final double price,
-                              final String shortDescription, final String longDescription,
-                              final int calories, final int salt) {
+                              final String shortDescription, final int calories, final int salt) {
         final RegisterDishController controller = new RegisterDishController();
 
         try {
-            controller.registerDish(name, dishType, price, shortDescription, longDescription, calories, salt);
+            controller.registerDish(name, dishType, price, shortDescription, calories, salt);
         } catch (final IntegrityViolationException | ConcurrencyException ex) {
             LOGGER.warn("Assuming dish '{}' already exists (activate trace log for details)", name);
             LOGGER.trace("Assuming existing record", ex);

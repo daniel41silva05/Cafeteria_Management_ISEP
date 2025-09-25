@@ -20,9 +20,9 @@ public class MealBootstrapper implements Action {
     public boolean execute() {
         final Calendar today = Calendar.getInstance();
 
-        Dish meatDish = new Dish(Designation.valueOf(TestDataConstants.DISH_NAME_MEAT), null, null, null, null, null);
-        Dish fishDish = new Dish(Designation.valueOf(TestDataConstants.DISH_NAME_FISH), null, null, null, null, null);
-        Dish vegetarianDish = new Dish(Designation.valueOf(TestDataConstants.DISH_NAME_VEGETARIAN), null, null, null, null, null);
+        Dish meatDish = new Dish(Designation.valueOf(TestDataConstants.DISH_NAME_MEAT), null, null, null, null);
+        Dish fishDish = new Dish(Designation.valueOf(TestDataConstants.DISH_NAME_FISH), null, null, null, null);
+        Dish vegetarianDish = new Dish(Designation.valueOf(TestDataConstants.DISH_NAME_VEGETARIAN), null, null, null, null);
 
         registerMeal(meatDish, MealType.LUNCH, today);
         registerMeal(vegetarianDish, MealType.LUNCH, today);

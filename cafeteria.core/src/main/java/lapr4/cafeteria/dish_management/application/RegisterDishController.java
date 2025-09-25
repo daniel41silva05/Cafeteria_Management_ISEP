@@ -21,11 +21,11 @@ public class RegisterDishController {
     private final DishRepository repo = PersistenceContext.repositories().dishes();
 
     public Dish registerDish(final String name, final DishType dishType, final double price, final String shortDescription,
-                                 final String longDescription, final int calories, final int salt) {
+                             final int calories, final int salt) {
         authz.ensureAuthenticatedUserHasAnyOf(CafeteriaRoles.POWER_USER, CafeteriaRoles.MENU_MANAGER);
 
         Dish newDish = new Dish(Designation.valueOf(name), dishType, Description.valueOf(shortDescription),
-                Description.valueOf(longDescription), Money.euros(price), NutricionalInfo.valueOf(calories, salt));
+                Money.euros(price), NutricionalInfo.valueOf(calories, salt));
 
         return repo.save(newDish);
     }
