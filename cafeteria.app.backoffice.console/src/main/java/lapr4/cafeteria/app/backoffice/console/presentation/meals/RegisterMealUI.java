@@ -31,7 +31,7 @@ public class RegisterMealUI extends AbstractUI {
 
             if (selectedDish != null) {
                 final MealType mealType = selectMealType();
-                final Calendar day = Console.readCalendar("Day: ");
+                final Calendar day = readValidDate();
 
                 try {
                     Meal meal = controller.registerMeal(selectedDish, mealType, day);
@@ -74,6 +74,24 @@ public class RegisterMealUI extends AbstractUI {
         System.out.println("Short Description: " + meal.dish().shortDescription());
         System.out.println("Calories: " + meal.dish().nutricionalInfo().calories());
         System.out.println("Salt: " + meal.dish().nutricionalInfo().salt());
+    }
+
+    private Calendar readValidDate() {
+        Calendar today = Calendar.getInstance();
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.SECOND, 0);
+        today.set(Calendar.MILLISECOND, 0);
+
+        Calendar chosenDate;
+        do {
+            chosenDate = Console.readCalendar("Day (dd-mm-yyyy): ");
+            if (chosenDate.before(today)) {
+                System.out.println("The date cannot be in the past. Please try again.");
+            }
+        } while (chosenDate.before(today));
+
+        return chosenDate;
     }
 
     @Override
